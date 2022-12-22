@@ -19,9 +19,7 @@ app.title = 'Mental Health - Suicide Dashboard Analytics'
 
 ## ---- Navbar
 navbar = dbc.NavbarSimple(
-    children=[
-        dbc.NavItem(dbc.NavLink("Home", href="#")),
-    ],
+    
     brand="Mental Health - Suicide Dashboard Analytics",
     brand_href="#",
     color="light",
@@ -63,6 +61,7 @@ plot_maps=px.choropleth(s_country,
             color_continuous_scale='teal',
             color='death',
             animation_frame='year',
+            title='Total Death from Suicides',
             range_color=[0,75000],
             labels={'country_code':'Country Code','death':'Total Death (Suicide)','year':'Year'},
                        hover_name='country')
@@ -83,7 +82,7 @@ plot_top=px.bar(
     y = 'country',
     template = 'ggplot2',
     title = 'Top 10 Number of Suicide in 2019',
-    labels={'death':'Total death (Suicide)','country':'Country'},
+    labels={'death':'Total death (Suicide)','country':' '},
     color_discrete_sequence=['#4c78a8'],
 )
 
@@ -216,7 +215,7 @@ def plotrank(year_category):
     y = 'country',
     template = 'ggplot2',
     title = f'Top 10 Number of Suicide in {year_category}',
-    labels={'death':'Total death (Suicide)','country':'Country'},
+    labels={'death':'Total death (Suicide)','country':' '},
     color_discrete_sequence=['#4c78a8'],
     )
     return plot_top
