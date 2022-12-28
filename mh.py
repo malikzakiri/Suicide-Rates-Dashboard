@@ -29,6 +29,7 @@ navbar = dbc.NavbarSimple(
 s_age=pd.read_csv('s_age.csv')
 s_country=pd.read_csv('s_country.csv')
 s_gender=pd.read_csv('s_gender.csv')
+s_percent=pd.read_csv('s_percent.csv')
 
 ### CARD CONTENT
 total_country = [
@@ -56,15 +57,17 @@ percent_suicide = [
 ]
 
 ## --- Visualization Choropleth
-plot_maps=px.choropleth(s_country,
+plot_maps=px.choropleth(s_percent,
             locations='country_code',
             color_continuous_scale='teal',
-            color='death',
+            color='deaths',
             animation_frame='year',
-            title='Total Death from Suicides',
-            range_color=[0,75000],
-            labels={'country_code':'Country Code','death':'Total Death (Suicide)','year':'Year'},
-                       hover_name='country')
+            template='ggplot2',
+            title='Death Rate from Suicides',
+            range_color=[0,5],
+            labels={'country_code':'Country Code','deaths':'Death Rate from Suicide (%)','year':'Year','death_count':'Number of Deaths from Suicide'},
+                       hover_name='country',hover_data={'death_count':True})
+plot_maps.update_layout(title_text='Death Rate from Suicides', title_x=0.118)
 
 ## --- Visualization line
 plot_line=px.line(s_gender[s_gender['country']=='Indonesia'].sort_values('year'),
@@ -77,12 +80,13 @@ plot_line=px.line(s_gender[s_gender['country']=='Indonesia'].sort_values('year')
 
 # --- Visualization bar plot
 plot_top=px.bar(
-    s_country[s_country['year']==2019].sort_values('death').tail(10),
-    x = 'death',
+    s_percent[s_percent['year']==2019].sort_values('deaths').tail(10),
+    x = 'deaths',
     y = 'country',
     template = 'ggplot2',
-    title = 'Top 10 Number of Suicide in 2019',
-    labels={'death':'Total death (Suicide)','country':' '},
+    title = 'Top 10 Countries with the Highest Death Rate from Suicides in 2019',
+    labels={'deaths':'Total death (Suicide)','country':' '},
+    hover_data={'country':False},
     color_discrete_sequence=['#4c78a8'],
 )
 
@@ -155,7 +159,7 @@ app.layout = html.Div([
                     dbc.CardBody(
                         dcc.Dropdown(
                             id='choose_year',
-                            options=s_country['year'].unique(),
+                            options=s_percent['year'].unique(),
                             value=2019,    
                         ),
                     ),
@@ -210,13 +214,13 @@ app.layout = html.Div([
 
 def plotrank(year_category):
     plot_top=px.bar(
-    s_country[s_country['year']==year_category].sort_values('death').tail(10),
-    x = 'death',
+    s_percent[s_percent['year']==year_category].sort_values('deaths').tail(10),
+    x = 'deaths',
     y = 'country',
     template = 'ggplot2',
-    title = f'Top 10 Number of Suicide in {year_category}',
-    labels={'death':'Total death (Suicide)','country':' '},
-    color_discrete_sequence=['#4c78a8'],
+    title = f'Top 10 Countries with the Highest Death Rate from Suicides in {year_category}',
+    labels={'deaths':'Death Rate from Suicides','country':' '},
+    color_discrete_sequence=['#4c78a8'], hover_data={'country':False},
     )
     return plot_top
 
